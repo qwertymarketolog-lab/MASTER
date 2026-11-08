@@ -18,10 +18,12 @@ This file maps requirements to design locations and future verification evidence
 | ID-003 | One Person may act as customer and provider in different workflows | IDENTITY_AND_ORGANIZATION_MODEL §3 | Multi-capacity authorization tests | PROPOSED |
 | ID-004 | Organization actions require active membership and scoped permissions | IDENTITY_AND_ORGANIZATION_MODEL §2.5–2.6 | Membership/role authorization matrix tests | PROPOSED |
 | ID-005 | Representation is separate from membership and time/scope bounded | IDENTITY_AND_ORGANIZATION_MODEL §2.7 | Representation proof, expiry, and revocation tests | PROPOSED |
-| ID-006 | Every consequential action records actor and acting Party | DATA_MODEL §4, §9 | Audit attribution tests | PROPOSED |\n| ID-007 | Identity, membership, and representation data have separate purposes, access, and retention rules | DATA_PROTECTION §4; IDENTITY_AND_ORGANIZATION_MODEL | Data inventory and retention review | PROPOSED |
+| ID-006 | Every consequential action records actor and acting Party | DATA_MODEL §4, §9 | Audit attribution tests | PROPOSED |
+| ID-007 | Identity, membership, and representation data have separate purposes, access, and retention rules | DATA_PROTECTION §4; IDENTITY_AND_ORGANIZATION_MODEL | Data inventory and retention review | PROPOSED |
 | SEC-001 | Cross-tenant access is denied unless explicitly granted | SECURITY §4 | API/database/storage/search/cache/export isolation tests | PROPOSED |
 | SEC-002 | Membership and representation revocation blocks new actions | SECURITY §4 | Revocation and delayed-job authorization tests | PROPOSED |
-| SEC-003 | Platform staff privileges are separate and audited | SECURITY §5 | Privilege boundary and access audit tests | PROPOSED |\n| SEC-004 | Account takeover, stale authority, and forged representation are mitigated | THREAT_MODEL §Threat scenarios 15–19 | Account recovery, revocation, representation, and abuse tests | PROPOSED |
+| SEC-003 | Platform staff privileges are separate and audited | SECURITY §5 | Privilege boundary and access audit tests | PROPOSED |
+| SEC-004 | Account takeover, stale authority, and forged representation are mitigated | THREAT_MODEL §Threat scenarios 15–19 | Account recovery, revocation, representation, and abuse tests | PROPOSED |
 | NFR-001 | Every resource enforces object-level authorization | SECURITY §2–4 | Authorization matrix tests | PROPOSED |
 | NFR-002 | Sensitive data is minimized and classified | DATA_MODEL; DATA_PROTECTION | Data inventory/privacy review | PROPOSED |
 | NFR-003 | Russian localization and cross-border flows reviewed | DATA_PROTECTION §3–6 | Written legal/data-flow assessment | BLOCKED |
