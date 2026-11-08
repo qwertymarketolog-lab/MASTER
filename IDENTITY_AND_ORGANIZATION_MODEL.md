@@ -58,6 +58,8 @@ A Party is not automatically a legal conclusion about who is a contracting party
 
 ### 2.4 Organization
 
+An Organization has a claim-specific VerificationProfile, independent of its OrganizationType and legal authority. Business/registration and bank-account verification are separate claims with source, scope, time, and validity metadata. No single numeric verification level is a universal permission or payout threshold; risk policies evaluate the exact claim required for the action.
+
 An **Organization** is a non-human organizational participant with its own stable platform identity and independently maintained legal/business attributes.
 
 - Legal form, registration identifiers, jurisdiction, status, and verification source are separate attributes with restricted access and retention.
