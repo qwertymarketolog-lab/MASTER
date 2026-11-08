@@ -29,3 +29,7 @@ Disclose the fee payer, calculation base, timing, taxes, and refund treatment be
 
 ## 8. Pre-launch gate
 Obtain written provider confirmation and legal review of: merchant/agent roles, fund flow, settlement, fiscal receipts under 54-FZ, NPD receipts where applicable, refunds, chargebacks, consumer rights, platform commission, and accounting records.
+
+
+## 9. Detailed transaction design
+See TRANSACTION_FINANCIAL_MODEL.md for the proposed PartyType × TaxStatus × PaymentFlow matrix, separate Payment/Refund/Payout/Settlement state machines, financial invariants, and unresolved launch gates. That document is a proposal and does not select a provider or approve live money movement.
