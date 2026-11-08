@@ -33,3 +33,7 @@ Obtain written provider confirmation and legal review of: merchant/agent roles, 
 
 ## 9. Detailed transaction design
 See TRANSACTION_FINANCIAL_MODEL.md for the proposed PartyType × TaxStatus × PaymentFlow matrix, separate Payment/Refund/Payout/Settlement state machines, financial invariants, and unresolved launch gates. That document is a proposal and does not select a provider or approve live money movement.
+
+
+## 10. Merchant / supplier model decision gate
+See ADR-2026-011 and TRANSACTION_FINANCIAL_MODEL.md §2. No customer-facing supplier/MoR model has been selected. Executor-as-contracting-supplier is only a hypothesis for legal/provider review, not an approved MVP decision. Do not equate it with MASTER being a statutory payment agent. Live PaymentIntent creation and money movement remain blocked pending written legal, provider, accounting and fiscalization approvals.
