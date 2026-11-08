@@ -22,7 +22,7 @@ Qualified Russian counsel must assess, at minimum:
 - consumer protection and service-category obligations.
 
 ## 4. Data inventory
-Maintain a live inventory: data element, purpose, source, subject, legal basis, recipient, storage location, access, retention, deletion trigger, and vendor. No new field or integration enters production without an inventory update and review.
+Maintain a live inventory: data element, purpose, source, subject, legal basis, recipient, storage location, access, retention, deletion trigger, and vendor. Include Account identifiers, identity-link metadata, Person attributes, Party and Organization profiles, Membership and Representation records, role assignments, and authority-verification evidence as distinct data classes. No new field or integration enters production without an inventory update and review.
 
 ## 5. Privacy by design
 - Do not collect passport scans by default.

@@ -23,6 +23,11 @@ Customer/provider devices ↔ public frontend; frontend ↔ backend; backend ↔
 12. AI prompt/data leakage or unsafe recommendation: isolate untrusted inputs, minimize context, no secrets, human review, uncertainty labels.
 13. Supply-chain compromise: dependency pinning, scanning, review, protected CI, secret isolation.
 14. Backup failure/ransomware: isolated backups, restore drills, recovery objectives.
+15. Organization account takeover or shared credentials: individual human Accounts only, MFA for privileged users, no shared organization login, monitored recovery and account-linking controls.
+16. Stale membership or representation after revocation: server-side authorization at action time, bounded cache/token lifetime, revocation events, and re-checks for delayed jobs.
+17. Forged or over-broad representation: scoped authority evidence, independent verification proportionate to risk, explicit acting-Party confirmation, expiry/revocation, and no self-granted authority.
+18. Cross-tenant leakage through search, cache, export, object storage, or background jobs: consistent Party ownership checks and isolation tests across every data path.
+19. Privileged support misuse or unauthorized impersonation: no password impersonation, ticketed just-in-time access, narrow scope, audit, and periodic review.
 
 ## Required pre-launch work
 Assign likelihood/impact and owner; document mitigations and residual risk; test authorization and upload controls; review vendors; exercise incident response; restore from backup; independently assess high-risk findings. An unassessed high-risk threat blocks launch.
