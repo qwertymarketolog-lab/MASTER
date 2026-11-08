@@ -216,9 +216,7 @@ For the Lesnoy pilot:
 - ActingParty normalization and immutable snapshot tests across all consequential transaction events.
 - Verification claims and ContactPoint lifecycle/privacy controls.
 - Every SERVICE Account has exactly one accountable owner Party (Individual or Organization) and a named human owner/contact; it is a machine principal, not a Person or Party and can never be an ActingParty by itself. Consequential machine actions are attributed to the owner Party through explicit, scoped and revocable service authorization, retaining both service-principal and responsible-owner attribution.
-- Service Account ownership, scope, credential rotation, revocation, and attribution tests.
-- Pseudonymization/tombstone behavior preserving lawful historical transaction attribution.
-- Service Account permissions and non-human actor attribution.
+- Service Account ownership, scope, credential rotation, revocation, permissions and non-human actor attribution tests.
 - Pseudonymization/tombstone behavior preserving lawful historical transaction attribution.
 - Permission matrix for each role, action, resource, and scope.
 - Cross-tenant isolation tests for API, database access, object storage, search, caches, exports, and background jobs.
