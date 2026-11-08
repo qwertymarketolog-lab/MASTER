@@ -45,9 +45,9 @@ A **Party** is a participant in a platform relationship, request, offer, agreeme
 Party is the common reference used by domain records where a customer/provider/contracting participant is required. It has an explicit party kind:
 
 - **INDIVIDUAL** — a natural person acting in their own name.
-- **ORGANIZATION** — an organization represented by authorized people.
+- **ORGANIZATION** — an organizational container represented by authorized people. Its `OrganizationType` describes its operating form; it does not by itself determine legal personality or contracting-party status.
 
-A Person may be linked to an Individual Party. An Organization Party is not a login identity and acts through people with valid authority.
+A Person may be linked to an Individual Party. An Organization Party is not a login identity and acts through people with valid authority. Party taxonomy is `INDIVIDUAL | ORGANIZATION`; `OrganizationType` is a separate attribute, initially `LEGAL_ENTITY | SOLE_PROPRIETOR | TEAM | OTHER`.
 
 A Party is not automatically a legal conclusion about who is a contracting party. The actual contracting parties for each workflow must match the approved legal model and agreement.
 
@@ -58,7 +58,9 @@ An **Organization** is a non-human organizational participant with its own stabl
 - Legal form, registration identifiers, jurisdiction, status, and verification source are separate attributes with restricted access and retention.
 - Organization membership does not itself prove statutory representation or signing authority.
 - Organization records must not be fabricated from an individual's profile.
-- Sole-proprietor / individual-entrepreneur status is a status of a natural person under the applicable legal model; it must not be represented as a separate legal entity merely to simplify software modeling.
+- A sole proprietor acting alone may use an Individual Party with a time-bound `TaxStatus` of `SOLE_PROPRIETOR`.
+- Where an individual entrepreneur needs a multi-person operating container, an Organization of type `SOLE_PROPRIETOR` may represent the business workspace, with the entrepreneur as owner/member. This is a platform modeling container, not a declaration that the business is a separate legal person; the actual contracting Party and payment recipient must be resolved by the approved legal scenario.
+- An informal team may use an Organization of type `TEAM` as a collaboration container. This does not create a legal entity, employer relationship, partnership, or single contracting party. Independent team members retain their own legal/tax status and may require separate agreements and payment flows.
 - A legal entity may have multiple people, roles, and delegated representatives.
 
 ### 2.5 Membership
@@ -101,7 +103,11 @@ Authorization combines:
 
 A role alone never authorizes access to every resource.
 
-### 2.7 Representation and Delegation
+### 2.7 TaxStatus and Provider Business Status
+
+`TaxStatus` is a time-bound legal/tax classification attached to the relevant Party and supported by a named source, check time, validity/recheck policy, and result. Examples include `INDIVIDUAL`, `SELF_EMPLOYED_NPD`, `SOLE_PROPRIETOR`, and other legally reviewed statuses. It is not inferred from `OrganizationType`, identity verification, or qualification. Where the same human participates through more than one Party, status is evaluated for the Party and transaction context involved. A tax-status change creates a new version/event; historical transactions retain the status snapshot used at the time. Tax status alone does not determine the contracting party, tax agent, receipt issuer, or merchant of record; those are scenario-level legal decisions.
+
+### 2.8 Representation and Delegation
 
 A **Representation** records authority for a Person or Party to act on behalf of another Party for a defined scope.
 
@@ -123,20 +129,32 @@ Rules:
 - A representative cannot grant themselves authority on behalf of another Party.
 - The UI must show which Party the person is acting for before consequential actions and capture that Party in the resulting agreement/event.
 
-## 3. Relationship rules and invariants
+## 3. Acting Party contract
 
-1. One authenticated Account resolves to one active Person context at a time.
+Every consequential domain action refers to one normalized `ActingParty` value:
+
+`ActingParty = (Party, optional Representation)`
+
+- A person acting for themselves uses their Individual Party with explicit self-capacity; no fabricated delegation record is required.
+- A person acting for an Organization or another Party uses that Party plus the applicable active Representation when the action legally or operationally requires it. Membership and Role Assignment remain separate authorization inputs.
+- Request, Offer, Agreement, Order, Payment, Refund, Payout, Settlement, and Dispute events use the same ActingParty reference shape; the legal counterparty/beneficiary remains a separately resolved transaction role where required.
+- At each consequential action, persist an immutable `ActingPartySnapshot`: actor Account and Person IDs, Party ID and kind/type, capacity, Membership/Role Assignment/Representation identifiers and versions used, relevant verification/tax-status claim versions, authorization decision reference, and event timestamp. Do not rewrite this snapshot after a membership ends, a representative leaves, or a profile changes.
+- A snapshot records what the platform evaluated and who acted; it does not independently prove legal authority or override a later legal finding.
+
+## 4. Relationship rules and invariants
+
+1. In the MVP, one active Account resolves to one Person; account merging and multiple active Accounts per Person are out of scope.
 2. A Person may have an Individual Party and memberships in multiple Organizations.
 3. A Person may act as customer in one workflow and provider in another; customer/provider are contextual capabilities, not mutually exclusive account types.
 4. An Organization acts only through an authenticated Person with an active Membership and the required Role Assignment and, where legally required, valid Representation.
-5. An Individual Entrepreneur / self-employed tax status is recorded as a separate, time-bound business/tax status of the relevant natural person or Individual Party; it does not change the Party kind to ORGANIZATION.
+5. TaxStatus is a time-bound attribute of the relevant Party (and is snapshotted for transaction events); it does not automatically change Party kind. A multi-person sole-proprietor workspace may use Organization(SOLE_PROPRIETOR) without asserting separate legal personality.
 6. Qualification, license, tax status, identity assurance, and authority are distinct verification dimensions. Passing one does not imply passing another.
-7. Every consequential action records actor_account_id, actor_person_id, acting_party_id, and any membership/representation/role assignment used.
+7. Every consequential action records a normalized ActingParty and immutable ActingPartySnapshot, including actor_account_id, actor_person_id, acting_party_id, relevant authority/role references and their versions.
 8. A resource has an explicit owning Party or explicit platform ownership classification. Access by another Party requires an explicit relationship or grant.
 9. Public catalogue data is not tenant-private data. Private organization/project/case data is never exposed merely because a user knows an identifier.
 10. No organization may share login credentials. Individual accountability is mandatory.
 
-## 4. Tenant and resource isolation
+## 5. Tenant and resource isolation
 
 A **tenant scope** is a security partition for data owned by an Individual Party or Organization Party. It is not a claim that every database row must carry a simplistic tenant_id.
 
@@ -149,7 +167,7 @@ A **tenant scope** is a security partition for data owned by an Individual Party
 - Where practical, database constraints and composite ownership keys should make cross-tenant references difficult to create accidentally.
 - Tenant context must be derived from authenticated relationships and server-side authorization, never trusted from a client-supplied tenant identifier alone.
 
-## 5. Authorization decision contract
+## 6. Authorization decision contract
 
 For each protected operation, the authorization layer evaluates:
 
@@ -165,7 +183,7 @@ Default outcome is DENY. Ambiguous identity, stale membership, missing authority
 
 Authorization must be checked on the server for every request and again at execution time for delayed jobs or sensitive asynchronous actions. Frontend visibility is not an access control.
 
-## 6. Lifecycle and audit
+## 7. Lifecycle and audit
 
 - Account, Person, Party, Membership, Role Assignment, and Representation have explicit lifecycle states.
 - State changes are timestamped and attributed; material changes append audit events rather than silently rewriting history.
@@ -174,7 +192,7 @@ Authorization must be checked on the server for every request and again at execu
 - Account closure does not automatically delete records that must be retained for contracts, accounting, safety, dispute handling, or other lawful purposes. Retention and deletion are governed by DATA_PROTECTION.md.
 - Administrative support access is separate from acting as the user. No password impersonation. Exceptional access requires a ticket/reason, narrow scope, time limit, audit, and review.
 
-## 7. MVP boundary
+## 8. MVP boundary
 
 For the Lesnoy pilot:
 - The customer and an individual provider may each act through an Individual Party.
@@ -183,9 +201,14 @@ For the Lesnoy pilot:
 - The conceptual model must nevertheless preserve the Organization, Membership, Role Assignment, and Representation boundaries so later support does not require redefining Account or Party.
 - No production onboarding of organizations or delegation is authorized by this document alone.
 
-## 8. Required verification before implementation freeze
+## 9. Required verification before implementation freeze
 
-- Identity/account linking and recovery threat model.
+- Identity/account linking and recovery threat model; enforce one active Account per Person in MVP, with merge excluded.
+- Party/OrganizationType/TaxStatus matrix and transaction-specific legal counterparty mapping.
+- ActingParty normalization and immutable snapshot tests across all consequential transaction events.
+- Verification claims and ContactPoint lifecycle/privacy controls.
+- Service Account permissions and non-human actor attribution.
+- Pseudonymization/tombstone behavior preserving lawful historical transaction attribution.
 - Permission matrix for each role, action, resource, and scope.
 - Cross-tenant isolation tests for API, database access, object storage, search, caches, exports, and background jobs.
 - Membership invitation, expiry, suspension, and revocation tests.
@@ -195,4 +218,4 @@ For the Lesnoy pilot:
 - Data inventory, retention, localization, and legal-role review for identity and organization attributes.
 - Review of legal evidence requirements for organization representation and signing authority.
 
-**Open decisions:** exact identity assurance levels; whether multiple Accounts per Person are needed in the pilot; permitted proof sources for representation; detailed role-permission matrix; tenant partitioning strategy at database and storage layers; organization onboarding timing. These remain PROPOSED until explicitly approved.
+**Open decisions:** exact verification claim catalogue and evidence sources; permitted proof sources for representation; detailed role-permission matrix; tenant partitioning strategy at database and storage layers; organization onboarding timing; legal mapping of Organization(SOLE_PROPRIETOR) and Organization(TEAM) to contracting parties and payment recipients. These remain PROPOSED until explicitly approved.
