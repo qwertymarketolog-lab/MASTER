@@ -12,7 +12,13 @@ This file maps requirements to design locations and future verification evidence
 | FR-006 | Complaint gives both parties a response path | SPECIFICATION §10 | Complaint workflow tests | PROPOSED |
 | FR-007 | Expert panel supports recusal and inconclusive outcome | SPECIFICATION §10 | Expert-panel policy tests | PROPOSED |
 | FR-008 | Category workflows are configurable/versioned | ARCHITECTURE §5 | Category contract tests | PROPOSED |
-| FR-009 | Payment status comes from verified provider evidence | PAYMENT_MODEL | Webhook/reconciliation tests | BLOCKED |
+| FR-009 | Payment status comes from verified provider evidence | PAYMENT_MODEL; TRANSACTION_FINANCIAL_MODEL §§3–5 | Webhook/reconciliation tests | BLOCKED |
+| FIN-001 | PaymentIntent, Payment, Transaction, Refund, Payout, Settlement, and Ledger are separate concepts | TRANSACTION_FINANCIAL_MODEL §3 | Domain schema and lifecycle contract tests | PROPOSED |
+| FIN-002 | PartyType, OrganizationType, and TaxStatus constrain but do not determine legal payment flow | TRANSACTION_FINANCIAL_MODEL §2; BUSINESS_AND_LEGAL_MODEL | Scenario legal-role matrix and provider confirmation | BLOCKED |
+| FIN-003 | Payment, Refund, Payout, and Settlement have independent evidence-driven state machines | TRANSACTION_FINANCIAL_MODEL §4 | State-transition and provider-adapter contract tests | PROPOSED |
+| FIN-004 | Ledger uses balanced append-only double-entry records and is not a wallet | TRANSACTION_FINANCIAL_MODEL §§3.4, 5 | Accounting design review and journal invariant tests | PROPOSED |
+| FIN-005 | Financial terminal states require authoritative provider/bank evidence and reconciliation | TRANSACTION_FINANCIAL_MODEL §§4–5 | Raw event, idempotency, reconciliation, and audit tests | PROPOSED |
+| FIN-006 | Live flows require scenario-specific legal, provider, fiscalization, accounting, and security approval | TRANSACTION_FINANCIAL_MODEL §§6–7; PAYMENT_MODEL §8 | Written legal/provider approvals and end-to-end test evidence | BLOCKED |
 | ID-001 | Account authentication is distinct from Person identity | IDENTITY_AND_ORGANIZATION_MODEL §2 | Account/person linking and recovery tests | PROPOSED |
 | ID-002 | Party distinguishes individual and organization participants | IDENTITY_AND_ORGANIZATION_MODEL §2–3 | Party relationship and persistence tests | PROPOSED |
 | ID-003 | One Person may act as customer and provider in different workflows | IDENTITY_AND_ORGANIZATION_MODEL §3 | Multi-capacity authorization tests | PROPOSED |
@@ -21,7 +27,7 @@ This file maps requirements to design locations and future verification evidence
 | ID-006 | Every consequential action records actor and acting Party | DATA_MODEL §4, §9 | Audit attribution tests | PROPOSED |
 | ID-007 | Identity, membership, and representation data have separate purposes, access, and retention rules | DATA_PROTECTION §4; IDENTITY_AND_ORGANIZATION_MODEL | Data inventory and retention review | PROPOSED |
 | ID-008 | Party kind and OrganizationType are distinct; SOLE_PROPRIETOR and TEAM containers do not assert separate legal personality | IDENTITY_AND_ORGANIZATION_MODEL §§2–4; GLOSSARY | Party taxonomy and legal-scenario review | PROPOSED |
-| ID-009 | TaxStatus is time-bound, Party-scoped, source-backed, and snapshotted for consequential transactions | IDENTITY_AND_ORGANIZATION_MODEL §§2.7, 3; DATA_MODEL | Tax-status lifecycle and transaction snapshot tests; legal review | PROPOSED |
+| ID-009 | TaxStatus is time-bound, Party-scoped, source-backed, and snapshotted for consequential transactions | IDENTITY_AND_ORGANIZATION_MODEL §§2.8, 3; DATA_MODEL | Tax-status lifecycle and transaction snapshot tests; legal review | PROPOSED |
 | ID-010 | All consequential actions use normalized ActingParty and immutable event-time snapshot | IDENTITY_AND_ORGANIZATION_MODEL §3; DATA_MODEL §§4, 9 | Cross-domain event schema and audit attribution tests | PROPOSED |
 | ID-011 | Person/Organization verification claims are independent and source/time scoped | IDENTITY_AND_ORGANIZATION_MODEL; GLOSSARY | Verification policy and risk-gate tests | PROPOSED |
 | ID-012 | ContactPoints have independent lifecycle, verification, privacy, and retention | GLOSSARY; DATA_MODEL; DATA_PROTECTION | Contact change, verification, access, and deletion tests | PROPOSED |
