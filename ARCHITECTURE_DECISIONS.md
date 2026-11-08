@@ -109,3 +109,23 @@ This register records material decisions. Append new entries; do not silently re
 - **Migration/rollback:** No runtime migration is authorized. Before schema freeze, complete identity assurance, account linking, permission matrix, tenant isolation, representation proof, retention, and legal review. Any implementation migration requires forward/backward compatibility and tested rollback.
 - **Evidence:** User's explicit decision on 2026-11-08: principles 1–8 confirmed; amendments A/B/C and supporting controls accepted as architectural direction. Supporting design recorded in IDENTITY_AND_ORGANIZATION_MODEL.md, GLOSSARY.md, DATA_MODEL.md, and REQUIREMENTS_TRACEABILITY.md. No code, migration, runtime test, legal opinion, or security verification is implied.
 - **Approvers:** Product owner direction accepted on 2026-11-08. Technical, security, privacy, and legal approvals remain required in their domains.
+
+
+### ADR-2026-010 — Transaction and financial lifecycle separation
+- **Status:** PROPOSED
+- **Date:** 2026-11-08
+- **Context:** MASTER must distinguish agreed service obligations from payment initiation, provider-confirmed payment events, refunds, provider payouts, settlement, and internal accounting. Party taxonomy and TaxStatus affect possible flows, but do not by themselves determine legal counterparties or fiscal duties.
+- **Decision proposal:**
+  1. Model PaymentIntent, Payment, Transaction, Refund, Payout, Settlement, and Ledger as separate financial concepts with independent state histories.
+  2. Use a PartyType × OrganizationType × TaxStatus × PaymentFlow matrix as a scenario-routing constraint, not as a legal conclusion.
+  3. Keep the legal contracting party, payer, beneficiary, merchant of record, receipt issuer, tax agent, and platform role as separately resolved scenario attributes.
+  4. Use provider-confirmed evidence and reconciliation for terminal financial states; client callbacks and unverified webhooks are non-authoritative.
+  5. Maintain an append-only double-entry ledger for MASTER's accounting/reconciliation view; it is not a wallet and does not authorize custody of funds.
+  6. Treat UNKNOWN, stale, mismatched, or inconclusive financial/legal evidence as HOLD.
+  7. Do not enable live payment flows until legal counsel, provider, accounting, fiscalization, security, and reconciliation gates pass.
+- **Alternatives:** One generic Payment status on Order; treating a successful redirect as payment; using an internal wallet/escrow abstraction; routing payments solely from profile tax labels. Rejected because they collapse distinct facts and may create legal, accounting, or custody risks.
+- **Consequences:** More explicit domain objects and reconciliation work; clearer auditability, provider portability, refund/payout separation, and safer support for team-based work. No provider or legal arrangement is selected by this proposal.
+- **Impact:** Identity/Party/TaxStatus, Agreements, Orders, Payments, Accounting, provider adapters, data protection, security, support, refunds, complaints, APIs, and operations.
+- **Migration/rollback:** No runtime migration. Before schema freeze, approve scenario legal roles, state transition contracts, ledger posting rules, idempotency/reconciliation design, and migration/rollback procedures.
+- **Evidence:** Proposed model in TRANSACTION_FINANCIAL_MODEL.md; current PAYMENT_MODEL.md and BUSINESS_AND_LEGAL_MODEL.md; user-approved ADR-009 direction. No legal opinion, provider confirmation, implementation, or test evidence is implied.
+- **Approvers:** Product owner review pending; legal, accounting, provider, technical, and security approvals required in their domains.
