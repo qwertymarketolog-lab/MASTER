@@ -39,7 +39,7 @@ ContactPoints (email, phone, postal address, bank-account endpoint, or other app
 A **Person** is the human identity to which one or more verified account access methods may be linked.
 
 - Person identity attributes are minimized and classified as personal data.
-- One person may have multiple authentication methods and, only through a controlled proof-and-confirmation process, more than one Account linked to the same Person.
+- In the MVP, one Person has at most one active Account; multiple authentication methods may be linked to that Account. Account consolidation is a separately reviewed future capability.
 - External identity-provider authentication proves only what the provider's documented assurance level supports. It does not automatically prove professional qualification, tax status, legal capacity, or authority to represent an organization.
 - Account-to-Person linking and account recovery must prevent unauthorized account takeover and accidental identity merges.
 
@@ -57,10 +57,6 @@ A Person may be linked to an Individual Party. An Organization Party is not a lo
 A Party is not automatically a legal conclusion about who is a contracting party. The actual contracting parties for each workflow must match the approved legal model and agreement.
 
 ### 2.4 Organization
-
-An Organization also has a claim-specific VerificationProfile, independent of its OrganizationType and legal authority. Business/registration and bank-account verification are separate claims with source, scope, time, and validity metadata. No single numeric verification level should be treated as a universal permission or payout threshold; risk policies evaluate the exact claim required for the action.
-
-### 2.5 Organization
 
 An **Organization** is a non-human organizational participant with its own stable platform identity and independently maintained legal/business attributes.
 
