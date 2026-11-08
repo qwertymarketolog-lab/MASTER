@@ -87,7 +87,7 @@ This register records material decisions. Append new entries; do not silently re
 - **Approvers:** Product owner (user); technical/legal approvals remain required for their respective areas.
 
 ### ADR-2026-009 — Separate Account, Person, Party, Organization, Membership, and Representation
-- **Status:** PROPOSED
+- **Status:** ACCEPTED AS DIRECTION (design only; not implementation approval)
 - **Date:** 2026-11-08
 - **Context:** MASTER must support people acting in multiple capacities, individual providers, legal entities with multiple human operators, scoped project teams, and delegated authority without conflating login identity, domain participation, and legal authority.
 - **Decision proposal:**
@@ -99,9 +99,13 @@ This register records material decisions. Append new entries; do not silently re
   6. Keep customer/provider as contextual capabilities, not mutually exclusive Account types. Keep identity assurance, business/tax status, qualification, and authority as separate verification dimensions.
   7. Derive tenant scope from resource-owning Party and server-side relationships. Require explicit cross-Party grants and enforce equivalent isolation across database, storage, search, caches, exports, and background jobs.
   8. Keep Organization onboarding and delegated actions out of the pilot UI until legal, security, and operational gates pass, while preserving the conceptual extension points.
+  9. Keep Party kind as INDIVIDUAL or ORGANIZATION and add OrganizationType (LEGAL_ENTITY, SOLE_PROPRIETOR, TEAM, OTHER). Organization(SOLE_PROPRIETOR) and Organization(TEAM) are platform operating containers only; they do not create legal personality, employer status, or a single contracting party by themselves.
+  10. Attach time-bound, source-backed TaxStatus to the relevant Party; evaluate it in transaction context and preserve the event-time claim snapshot. TaxStatus does not by itself decide contracting party, receipt issuer, tax agent, or merchant of record.
+  11. Normalize consequential action attribution as ActingParty = (Party, optional Representation), with an immutable ActingPartySnapshot including actor, Party, authority/role references, relevant claim versions, and timestamp.
+  12. Add claim-specific verification profiles for Person and Organization; independently manage ContactPoints; support non-human Service Accounts without a Person; preserve historical attribution through lawful pseudonymization/tombstone; enforce one active Account per Person in MVP and defer account merging.
 - **Alternatives:** One global User record with role flags; Organization as a shared login; treating Membership as signing authority; a single tenant_id trusted from clients. Rejected because these collapse distinct trust boundaries and create authorization and audit risks.
-- **Consequences:** More explicit relationships and authorization logic; clearer audit attribution and safer multi-organization/project growth. The model does not itself establish legal identity or authority and does not authorize production organization onboarding.
+- **Consequences:** More explicit relationships and authorization logic; clearer audit attribution and safer multi-organization/project growth. The model does not itself establish legal identity or authority and does not authorize production organization onboarding. Organization(SOLE_PROPRIETOR) and Organization(TEAM) are software collaboration/business containers, not legal conclusions. TaxStatus and verification claims must be checked per transaction risk.
 - **Impact:** Identity & Access, Parties & Organizations, profiles, requests, offers, agreements, orders, projects, evidence, complaints, security, data protection, APIs, audit, and support operations.
 - **Migration/rollback:** No runtime migration is authorized. Before schema freeze, complete identity assurance, account linking, permission matrix, tenant isolation, representation proof, retention, and legal review. Any implementation migration requires forward/backward compatibility and tested rollback.
-- **Evidence:** Proposed conceptual model in IDENTITY_AND_ORGANIZATION_MODEL.md; user approval and legal/security verification remain pending.
-- **Approvers:** Product owner approval pending; technical/security/legal approvals required in their domains.
+- **Evidence:** User's explicit decision on 2026-11-08: principles 1–8 confirmed; amendments A/B/C and supporting controls accepted as architectural direction. Supporting design recorded in IDENTITY_AND_ORGANIZATION_MODEL.md, GLOSSARY.md, DATA_MODEL.md, and REQUIREMENTS_TRACEABILITY.md. No code, migration, runtime test, legal opinion, or security verification is implied.
+- **Approvers:** Product owner direction accepted on 2026-11-08. Technical, security, privacy, and legal approvals remain required in their domains.
