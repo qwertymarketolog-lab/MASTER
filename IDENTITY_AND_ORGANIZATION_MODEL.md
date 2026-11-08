@@ -193,7 +193,7 @@ Authorization must be checked on the server for every request and again at execu
 ## 7. Lifecycle and audit
 
 - Account, Person, Party, Membership, Role Assignment, and Representation have explicit lifecycle states.
-- State changes are timestamped and attributed; material changes append audit events rather than silently rewriting history.
+- State changes are timestamped and attributed; material changes append audit events rather than silently rewriting history. Membership grants/changes/revocations, Role Assignment grants/changes/revocations, Representation issuance/amendment/suspension/revocation/expiry, and service-authorization changes require immutable ordered audit events with actor, owner Party, scope, effective time, evidence reference, reason and correlation ID. Current-state records are projections, not a replacement for the historical event trail.
 - Invitations are single-use, expiring, and bound to the intended recipient and organization.
 - Membership and representation revocation must invalidate sessions/tokens or force a fresh authorization check within a documented bound.
 - Account closure does not automatically delete records that must be retained for contracts, accounting, safety, dispute handling, or other lawful purposes. Retention and deletion are governed by DATA_PROTECTION.md.
@@ -215,6 +215,7 @@ For the Lesnoy pilot:
 - Party/OrganizationType/TaxStatus matrix and transaction-specific legal counterparty mapping.
 - ActingParty normalization and immutable snapshot tests across all consequential transaction events.
 - Verification claims and ContactPoint lifecycle/privacy controls.
+- Every SERVICE Account has exactly one accountable owner Party (Individual or Organization) and a named human owner/contact; it is a machine principal, not a Person or Party and can never be an ActingParty by itself. Consequential machine actions are attributed to the owner Party through explicit, scoped and revocable service authorization, retaining both service-principal and responsible-owner attribution.
 - Service Account ownership, scope, credential rotation, revocation, and attribution tests.
 - Pseudonymization/tombstone behavior preserving lawful historical transaction attribution.
 - Service Account permissions and non-human actor attribution.
