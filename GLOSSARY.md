@@ -4,7 +4,7 @@
 
 | Term | Definition | Must not be confused with |
 |---|---|---|
-| Account | Authenticated platform principal used to sign in and hold sessions. | Person, customer, provider, organization |
+| Account | Authenticated platform principal used to sign in and hold sessions; type is HUMAN or SERVICE. | Person, customer, provider, organization |
 | Person | Human identity linked to one or more verified account access methods. | Account, Organization |
 | Party | Participant acting in a request, agreement, order, project, or case. | Login identity |
 | Individual Party | Party representing a natural person acting in their own name. | Individual Entrepreneur as a separate legal entity |
