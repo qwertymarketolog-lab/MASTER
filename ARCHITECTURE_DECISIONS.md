@@ -66,3 +66,23 @@ This register records material decisions. Append new entries; do not silently re
 - **Decision:** apply CHANGE_MANAGEMENT.md to material changes and record the decision here.
 - **Consequences:** additional review effort; traceable evolution.
 - **Impact:** every material change.
+
+
+### ADR-2026-008 — Scale-resilient platform foundation
+- **Status:** ACCEPTED
+- **Date:** 2026-11-08
+- **Context:** MASTER must grow beyond the initial Lesnoy pilot, adding service categories, professional domains, project teams, regions, users, and external providers without repeated rewrites of its shared core.
+- **Decision:**
+  1. Preserve a stable, category-independent domain core for identity and access, requests/offers, agreements and versioned changes, orders, evidence, audit history, trust, complaints, and payment references.
+  2. Add service categories and professional domains through versioned category packages: schemas, eligibility rules, workflows, deliverables, acceptance criteria, evidence requirements, and risk controls.
+  3. Integrate identity, payments, messaging, storage, verification, maps, and other external capabilities through replaceable adapters and explicit contracts.
+  4. Keep the initial deployment a modular monolith with enforced module boundaries; extract services only when measured scale, isolation, team ownership, or operational evidence justifies the added complexity.
+  5. Treat data integrity, privacy, security, observability, backup/restore, API compatibility, and operational ownership as foundation requirements, not later add-ons.
+  6. Keep MASTER, JAMP, VAULT, and ЦЕХ as independent projects with explicitly governed integrations; no shared-kernel or repository coupling is assumed.
+  7. Require impact analysis for material changes across modules, data, APIs, security, legal duties, integrations, operations, compatibility, migration, and rollback.
+- **Alternatives:** Build a narrowly scoped single-category application; start with microservices; bind the core directly to one provider; defer security/privacy/operations until after product-market fit. Rejected because they increase lock-in, complexity, or structural rework risk.
+- **Consequences:** More design and review before implementation; stronger extension boundaries and lower expected cost of adding domains. This decision does not claim infinite scalability or prove that any implementation meets a particular load target.
+- **Impact:** All product modules, data model, API contracts, integration adapters, security and privacy controls, legal review, deployment, operations, testing, and roadmap.
+- **Migration/rollback:** No runtime migration is authorized by this design decision. Future implementation changes must follow CHANGE_MANAGEMENT.md, include measured capacity evidence where relevant, and provide migration/rollback plans.
+- **Evidence:** User-approved platform principles recorded during the foundation discussion on 2026-11-08. Implementation, legal compliance, and load capacity remain unverified.
+- **Approvers:** Product owner (user); technical/legal approvals remain required for their respective areas.
