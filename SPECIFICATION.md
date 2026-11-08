@@ -16,7 +16,9 @@ MASTER is initially a marketplace and coordination intermediary. It is not assum
 - **Person:** human identity linked to an Account through controlled identity resolution.
 - **Party:** participant in a request, offer, agreement, order, project, or case.
 - **Individual Party:** a natural person acting in their own name.
-- **Organization:** an organizational Party that acts through authorized people; it never shares a login.
+- **Organization:** an organizational Party/container that acts through authorized people; OrganizationType (LEGAL_ENTITY, SOLE_PROPRIETOR, TEAM, OTHER) does not itself decide legal personality or contracting-party status; it never shares a login.
+- **ActingParty:** `(Party, optional Representation)`; consequential events retain an immutable event-time snapshot.
+- **TaxStatus / Verification:** source-backed, time-bound, claim-specific checks evaluated for the relevant Party and transaction.
 - **Membership:** a Person's scoped participation in an Organization.
 - **Representation:** separately recorded authority to act on behalf of a Party; membership alone does not prove signing authority.
 - **Customer / Provider:** contextual capabilities of a Party in a particular workflow. The same Person may act as a customer in one order and provider in another.
@@ -49,7 +51,7 @@ The core must not encode business rules for one trade. Initial pilot categories 
 - Create an Account and establish the relevant Person/Individual Party context.
 - Select service categories/coverage area.
 - Complete proportionate identity, business-status, qualification, authority, and eligibility checks appropriate to the category and law.
-- Where acting for an Organization, use an active Membership and the required scoped Role Assignment and Representation.
+- Where acting for an Organization, use an active Membership and the required scoped Role Assignment and Representation. The legal contracting Party and payment recipient must be resolved independently for each approved scenario; a TEAM or SOLE_PROPRIETOR workspace is not automatically the contracting party.
 - Set availability and commercial terms.
 - Review requests and submit an offer or decline as the relevant Party.
 - Confirm the order terms before work begins.
