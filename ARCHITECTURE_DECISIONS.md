@@ -129,3 +129,18 @@ This register records material decisions. Append new entries; do not silently re
 - **Migration/rollback:** No runtime migration. Before schema freeze, approve scenario legal roles, state transition contracts, ledger posting rules, idempotency/reconciliation design, and migration/rollback procedures.
 - **Evidence:** Proposed model in TRANSACTION_FINANCIAL_MODEL.md; current PAYMENT_MODEL.md and BUSINESS_AND_LEGAL_MODEL.md; user-approved ADR-009 direction. No legal opinion, provider confirmation, implementation, or test evidence is implied.
 - **Approvers:** Product owner review pending; legal, accounting, provider, technical, and security approvals required in their domains.
+
+
+### ADR-2026-011 — Merchant of Record and customer-facing supplier model
+- **Status:** PROPOSED — DECISION BLOCKED; no MVP model selected.
+- **Date:** 2026-11-08
+- **Context:** Financial architecture depends on who contracts with the customer, supplies the service, receives consideration, issues fiscal documents, owes refunds and bears consumer obligations. “Merchant of Record” is a commercial/technical label, not a substitute for Russian-law classification.
+- **Options:** (A) Platform-as-MoR: MASTER is actual supplier and providers are lawful subcontractors; (B) Executor-as-contracting-supplier: customer contracts directly with executor and MASTER supplies platform services under separate terms; (C) Hybrid: explicit scenario-specific supplier and payment routes.
+- **Current hypothesis, not decision:** Option B is the first model to investigate because it best matches the intended intermediary business. It is not approved for MVP or live money movement.
+- **Legal caution:** Do not equate Option B with MASTER being a statutory payment agent. 103-FZ defines payment-agent activity around cash acceptance from individuals and subsequent settlements; card/SBP acquiring and marketplace split flows need separate analysis. 115-FZ applicability must be assessed against actual regulated activity, not inferred from the word “agent.”
+- **Decision criteria:** supplier identity; consumer disclosures/liability; 54-FZ/KKT and NPD receipts; card/SBP fund flow/control; 161-FZ and provider product; 103-FZ and 115-FZ applicability; tax/accounting gross-vs-net and fee recognition; refunds/chargebacks; provider onboarding; data localization; 289-FZ obligations; operational cost and auditability.
+- **Consequences while unresolved:** no live PaymentIntent creation or money movement; provider adapters remain abstract; no production ledger posting rule; unknown scenario routes HOLD.
+- **Required evidence to accept:** written Russian legal opinion based on actual contracts and end-to-end funds flow; written provider confirmation; accountant-approved chart/posting and tax treatment; KKT/receipt responsibility matrix; approved customer/executor disclosures and refund/chargeback rules.
+- **Impact:** BUSINESS_AND_LEGAL_MODEL, PAYMENT_MODEL, TRANSACTION_FINANCIAL_MODEL, DATA_MODEL, tax/receipt workflows, Order/Agreement, provider adapters, support, accounting and compliance.
+- **Approvers:** Product owner decision pending; legal, accounting, provider, compliance and security approvals required in their domains.
+- **Rollback:** If no lawful and operationally viable option is confirmed, disable online payments for pilot and use only a separately reviewed non-platform settlement path. Do not improvise custody or agency.
