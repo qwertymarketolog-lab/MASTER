@@ -92,3 +92,7 @@ Use immutable agreement snapshots and append-only audit records for material act
 ## 10. Open design questions
 
 Resolve before schema freeze: identity assurance levels; account linking and recovery; exact Organization attributes; legal proof for Representation; detailed role-permission matrix; tenant partitioning strategy at database/storage/search/cache layers; identity and membership retention; legal role of MASTER for each data flow; address precision; messaging content retention; expert case access; payment reconciliation fields; cross-border provider flows; deletion vs statutory retention; project/tenant model.
+
+
+## 11. Transaction and financial model extension
+The proposed financial object boundaries and lifecycle contracts are defined in TRANSACTION_FINANCIAL_MODEL.md. PaymentIntent, Payment, Transaction, Refund, Payout, Settlement, and Ledger must remain distinct. Financial events retain immutable ActingParty and TaxStatus/verification snapshots. This is a conceptual proposal pending legal/accounting/provider review; no production schema is approved.
