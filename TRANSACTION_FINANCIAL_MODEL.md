@@ -105,7 +105,7 @@ Alternative terminal/exception states:
 - CAPTURED → PARTIALLY_REFUNDED | REFUNDED | CHARGEBACK_OPEN
 - CHARGEBACK_OPEN → CHARGEBACK_WON | CHARGEBACK_LOST | CHARGEBACK_PARTIAL
 
-Only include AUTHORIZED or CAPTURED when the selected provider exposes those distinct stages. A single-step provider may map directly to its authoritative success state. Payment state does not imply payout or settlement state.
+Only include AUTHORIZED or CAPTURED when the selected provider exposes those distinct stages. A single-step provider may map directly to its authoritative success state. Payment state does not imply payout or settlement state. Refunds and chargebacks are independent linked lifecycles; do not collapse concurrent partial refunds and chargebacks into one mutable Payment status. Payment retains its original capture outcome while linked Refund and Chargeback records track later movements.
 
 ### 4.3 Refund
 
@@ -151,7 +151,8 @@ A settlement may be split among provider, platform fee, tax/withholding, or othe
 7. Ledger journal entries balance; corrections use compensating entries.
 8. A payment/refund/payout/settlement event retains the relevant immutable ActingPartySnapshot and TaxStatus/verification claim versions.
 9. Beneficiary eligibility, bank-account verification, tax status, representation, and legal payment route are checked at the required risk points.
-10. UNKNOWN, INCONCLUSIVE, mismatched or stale evidence results in HOLD; do not synthesize PASS.
+10. Verification is claim-specific: email/phone/identity/business/bank-account claims are not interchangeable. Amount bands and transaction-risk thresholds must map to the exact required claims and provider/legal policy; no universal numeric verification score or arbitrary threshold is assumed.
+11. UNKNOWN, INCONCLUSIVE, mismatched or stale evidence results in HOLD; do not synthesize PASS.
 
 ## 6. Required legal and provider decision record
 
