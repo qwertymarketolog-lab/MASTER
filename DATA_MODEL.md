@@ -96,3 +96,7 @@ Resolve before schema freeze: identity assurance levels; account linking and rec
 
 ## 11. Transaction and financial model extension
 The proposed financial object boundaries and lifecycle contracts are defined in TRANSACTION_FINANCIAL_MODEL.md. PaymentIntent, Payment, Transaction, Refund, Payout, Settlement, and Ledger must remain distinct. Financial events retain immutable ActingParty and TaxStatus/verification snapshots. This is a conceptual proposal pending legal/accounting/provider review; no production schema is approved.
+
+
+## 12. Financial accounting model extension
+The proposed chart-of-accounts seed, posting conditions, reconciliation evidence and lifecycle independence are specified in TRANSACTION_FINANCIAL_MODEL.md §8. No statutory chart, custody model, revenue-recognition rule or production posting configuration is approved. Ledger entries must reference authoritative source events and accounting-policy versions; suspense entries require ownership and ageing, never silent balancing.
