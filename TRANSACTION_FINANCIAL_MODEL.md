@@ -20,26 +20,45 @@ MASTER must not take custody of customer funds or represent itself as an escrow 
 
 ## 2. PartyType × TaxStatus × PaymentFlow matrix
 
-This is a routing/design matrix, not a final legal classification. TaxStatus is time-bound and source-backed. The actual contracting party, payment recipient, receipt issuer, tax agent, merchant of record, and refund obligor must be resolved per legal scenario before a live flow is enabled.
+This is a constrained design matrix, not a legal conclusion. Platform Party, contracting party, service provider, consumer-facing supplier, payee/beneficiary, receipt issuer, payment-service provider and any agent are separate roles. “Merchant of Record” (MoR) is a commercial/technical shorthand; it does not replace Russian-law analysis of actual contracts, funds flow, consumer-facing offer, fiscalization and regulated activity.
 
-| Platform Party / OrganizationType | Relevant TaxStatus | Candidate contract/payment arrangement | Required controls and unresolved gates |
+### 2.1 MoR / customer-facing supplier alternatives — decision OPEN
+
+| Option | Customer-facing supplier | Payment and receipt implications | Consequences |
 |---|---|---|---|
-| Individual Party | INDIVIDUAL (ordinary natural person) | Direct customer-to-provider payment only if the provider is legally eligible and the service/contract structure is approved. | Confirm provider eligibility, contract parties, consumer disclosures, receipt/fiscalization duties, and provider onboarding. |
-| Individual Party | SELF_EMPLOYED_NPD | Candidate direct customer-to-provider flow through a provider supporting the applicable NPD workflow; commission/split only if legally and technically confirmed. | Verify current NPD status at defined points; capture provider-issued NPD receipt evidence where applicable; define cancellation/refund and correction handling. |
-| Individual Party | SOLE_PROPRIETOR | Candidate provider settlement to the verified business bank account through a marketplace-capable provider, or another counsel-approved route. | Verify registration/status, account ownership, activity restrictions, receipt/54-FZ responsibility, VAT/tax treatment where applicable, and contract role. |
-| Organization(LEGAL_ENTITY) | LEGAL_ENTITY / applicable tax regime | Candidate organization onboarding and provider settlement to its verified account; platform fee only under approved agency/marketplace arrangement. | Verify legal entity, representative authority, bank-account ownership, receipt issuer, merchant/agent role, tax treatment, and provider eligibility. |
-| Organization(SOLE_PROPRIETOR) | SOLE_PROPRIETOR / applicable regime | Organization is a platform business workspace; payment must route to the legally identified individual entrepreneur/business beneficiary, not to a fictional separate legal person. | Resolve who is the contracting party and account holder; validate representative authority and tax status. No automatic corporate split. |
-| Organization(TEAM) with independent members | Each member retains own TaxStatus (e.g. NPD, IP, individual) | No pooled TEAM payout by default. Model member-level agreements/obligations and separate provider payment/payout legs, or appoint one legally responsible lead provider only after explicit legal review. | TEAM is not automatically a legal entity, partnership, employer, agent, or contracting party. Define who contracts, who performs, who invoices/issues receipts, liability, IP, refunds, and member allocation. |
-| Organization(TEAM) with one lead provider | Lead provider's own verified TaxStatus | Possible direct customer-to-lead-provider flow; lead provider separately settles with subcontractors only under their lawful contracts and tax/receipt obligations. | MASTER must not infer subcontracting authority or employment status. Validate lead provider's right to engage others and responsibility for delivery. |
+| A. Platform-as-MoR | MASTER is the actual supplier to the customer and undertakes the service obligation; providers act as lawful subcontractors. | MASTER's customer consideration, refunds, consumer obligations, KKT, revenue, subcontractor payments and taxes require a full seller model. | Highest change to business model, risk and accounting. Not assumed for a matching platform. |
+| B. Executor-as-contracting-supplier | Customer contracts directly with the identified executor; MASTER supplies platform/coordination services under separate terms. | Executor's supplier and fiscal obligations must be mapped; provider-direct settlement is preferred for evaluation where lawful. MASTER's commission has its own contract and fiscal treatment. | Candidate direction, but does NOT automatically make MASTER a statutory payment agent. |
+| C. Hybrid | Supplier and contractual structure vary by approved service/provider scenario. | Receipt issuers, payment routes, refund obligors and fee accounting may differ. | Flexible but complex; requires explicit scenario registry and fail-closed routing. |
 
-### Matrix invariants
+**Decision:** ADR-2026-011 remains PROPOSED and selection is BLOCKED. Option B is only the first hypothesis to test, not an approved MVP model. Do not create live PaymentIntents or move money while the legal supplier/MoR model is unresolved.
 
-1. Party kind and OrganizationType describe platform participation/operating container; they do not alone identify the legal counterparty.
-2. TaxStatus is checked for the relevant Party and time, then snapshotted into the accepted Agreement/PaymentIntent and financial events.
-3. A mismatch, expired check, unknown status, or unresolved legal scenario blocks payment initiation or payout (HOLD).
-4. A TEAM container cannot be used as a pooled beneficiary by default.
-5. Payment provider capability does not prove that the legal structure is lawful.
-6. Payment routing must not be inferred from a profile label, client-supplied bank details, or an AI classification.
+**Legal caution:** Do not equate MoR with a Russian statutory role. 103-FZ defines payment-agent activity around acceptance of cash payments from individuals and subsequent settlements; it is not a synonym for every card/SBP marketplace flow. Applicability of 103-FZ, 161-FZ, 54-FZ, consumer/aggregator rules, 115-FZ and 289-FZ must be assessed separately against the real flow. A MoR label alone cannot answer these questions.
+
+### 2.2 Provider eligibility and Party / TaxStatus matrix
+
+| Platform Party / provider form | Relevant status | MVP design treatment | Payment route / gate |
+|---|---|---|---|
+| Individual Party — customer | INDIVIDUAL | Allowed as customer, subject to onboarding and consumer-data controls. | Payment only after a supplier scenario is enabled. |
+| Individual Party — executor without NPD/IP | INDIVIDUAL | RESTRICTED / disabled by default pending legal and tax review. | No payment until contract type, PIT/insurance, withholding/reporting, KKT/receipt, consumer and category rules are reviewed. |
+| Individual Party — executor, NPD | SELF_EMPLOYED_NPD | Candidate provider type if current NPD status, activity and statutory conditions are verified. | Provider-direct route preferred for evaluation; preserve NPD status evidence and receipt reference. Commission/receipt route needs separate approval. |
+| Individual Party — sole proprietor acting alone | SOLE_PROPRIETOR | Individual Party acting in the person's IP capacity when selected as contracting profile. | Contract, payee and receipt route tied to that verified profile. |
+| Organization(SOLE_PROPRIETOR) — IP workspace/team | SOLE_PROPRIETOR | Separate platform container for memberships/delegation; it does not create a separate legal person. | Resolve contract/payment to the actual IP. Freeze profile/counterparty mapping at Order acceptance. |
+| Organization(LEGAL_ENTITY) | LEGAL_ENTITY / applicable regime | Candidate provider organization after entity, authority, tax and bank checks. | Pay actual legal entity only through an approved provider/legal route. |
+| Organization(TEAM) — independent members, no legal entity | Each member has own NPD/IP/other status | Only TEAM pattern to evaluate for pilot: each member separately identified, contracted and paid for their own scope, if counsel approves. TEAM itself is not supplier or pooled payee. | Separate member obligations, amounts, evidence and receipts; otherwise HOLD. |
+| Organization(TEAM) — one lead executor | Lead's own NPD/IP/other status | Not enabled by default in pilot. Lead may contract for whole work only after review of subcontracting, authority, tax and consumer liability. | One lead receives payment only if genuinely the contracting supplier and subcontracting is lawful/documented. |
+| Organization(TEAM) — one legal entity | LEGAL_ENTITY | Model as Organization(LEGAL_ENTITY), not informal TEAM. | Payment to legal entity under its own contract, tax, payroll/subcontractor and KKT rules. |
+
+**IP profile selection:** At provider onboarding, select the legally accurate operating profile for a new engagement: Individual Party acting as the IP, or Organization(SOLE_PROPRIETOR) workspace representing the same IP with delegated access. The selected profile and legal counterparty mapping are snapshotted when Order terms are accepted. Existing Orders never silently switch profile or contracting party.
+
+### 2.3 Matrix invariants
+
+1. Platform Party and OrganizationType do not alone identify supplier, seller/MoR, payee, receipt issuer or agent.
+2. TaxStatus is checked for the relevant legal person and time, then snapshotted into the accepted Agreement and financial events.
+3. Unknown, stale, conflicting or expired status, unclear supplier identity or unresolved legal classification blocks payment and payout (HOLD).
+4. TEAM is never a pooled legal person or beneficiary by default.
+5. Provider capability does not prove the underlying contract/tax model is lawful.
+6. Routing is never inferred from profile labels, client bank details or AI classification.
+7. Supplier and payment route are frozen per accepted Order; material change requires a new approved agreement/change event and cannot rewrite history.
 
 ## 3. Core financial objects
 
@@ -182,3 +201,64 @@ Before enabling any live flow, create a scenario-specific decision record contai
 - Data localization, provider subprocessors, and cross-border transfer assessment.
 
 **Gate:** no production payment, payout, settlement, or live money movement until the scenario-specific legal matrix, provider confirmation, accounting design, fiscalization responsibilities, security review, and end-to-end reconciliation tests are approved.
+
+
+## 8. Financial accounting and operating controls — PROPOSED
+
+### 8.1 Ledger account catalogue (conceptual)
+
+This is a design seed, not a statutory chart or a conclusion that MASTER controls funds. Recognition, account class and gross/net presentation depend on the selected legal/provider model and accounting opinion.
+
+| Code | Account | Purpose / posting condition |
+|---|---|---|
+| 1000 | Provider clearing / settlement receivable | Provider-confirmed amount due to MASTER only where MASTER has a recognized accounting claim. Never post customer funds merely because UI says paid. |
+| 1010 | MASTER operating bank | MASTER's own funds after actual settlement to its bank. |
+| 1100 | Platform fee receivable | Contractually earned platform fee due from the party named in the approved fee agreement. |
+| 2000 | Executor payable | Recognized obligation only where MASTER is the contractual obligor or accounting rules require recognition; not a proxy for third-party funds held elsewhere. |
+| 2010 | Refund payable | Approved refund obligation of MASTER, if MASTER is the legal refund obligor. |
+| 2020 | Chargeback / dispute payable | Recognized chargeback obligation allocated to MASTER under provider contract and legal model. |
+| 2030 | Tax / withholding payable | Amount legally owed/remitted by MASTER; never assume withholding-agent status. |
+| 4000 | Platform commission revenue | Fee revenue recognized under approved contract/accounting policy; gross/net presentation requires accountant review. |
+| 5000 | Provider processing expense | Provider fees and transaction costs borne by MASTER. |
+| 9000 | Suspense / reconciliation differences | Temporary unresolved differences with owner, ageing, evidence and deadline; never a balancing plug. |
+
+Every journal entry references source event, Order/Agreement, counterparty, currency, tax treatment, effective/posting dates, policy version and correction link. Entries balance per currency. Raw provider statements remain separate evidence; the ledger is derived accounting evidence.
+
+### 8.2 Order and money lifecycles are independent
+
+| Order event/state | Payment | Payout | Meaning |
+|---|---|---|---|
+| ACCEPTED; work not started | Not initiated | Not initiated | Contract exists; no proof of payment. |
+| Work in progress | AUTHORIZED / CAPTURED / provider-confirmed success | Not initiated | Payment step may have succeeded; settlement and work are separate. |
+| Order COMPLETED | Pending, captured, refunded or disputed | Pending or not initiated | Service acceptance does not assert settlement or payout. |
+| Order COMPLETED | CAPTURED | PROCESSING | Payment recorded; beneficiary has no confirmed payout yet. |
+| Order COMPLETED | CAPTURED | PAID; Settlement RECONCILED | Provider/bank evidence confirms transfer and reconciliation. |
+| Order DISPUTED / REFUND_REQUESTED | Any prior payment state | May be blocked, pending or already paid | Dispute/refund is independent; no automatic reversal of work or settlement. |
+| Order CANCELLED | Absent, pending, captured or refunded | Absent or recovery may be needed | Cancellation does not prove refund or clawback completion. |
+
+Invariant: Order.COMPLETED ≠ Payment.SETTLED ≠ Payout.PAID ≠ Settlement.RECONCILED. Each requires its own evidence.
+
+### 8.3 Hold period and custody boundary
+
+No platform-defined hold period is approved. MASTER must not claim to hold, escrow, safeguard or control customer funds in the pilot. If provider offers delayed settlement, rolling reserve or dispute reserve, the provider is the holder under its contract; duration, release conditions, ownership, insolvency treatment and dispute process must be documented before use. If no provider mechanism exists, MASTER must not simulate one with an internal balance. A dispute can block payout only where the provider contract/product permits it.
+
+### 8.4 Chargeback and post-payout loss allocation
+
+No universal allocation is approved. Before a route is enabled, provider and customer/executor contracts must define: merchant/provider account holder; party debited by acquirer; principal, fees, representment costs and FX loss; evidence duties/deadlines; lawful recourse against executor; set-off limits and negative-balance treatment; and recovery after payout or account closure. Do not automatically debit future earnings or create a negative wallet. Provider debit and contractual recourse govern accounting recognition.
+
+### 8.5 Reconciliation operating policy
+
+Pilot proposal, subject to provider capability:
+- ingest signed webhooks continuously; preserve raw payload and signature-verification result;
+- import provider transaction/settlement reports at least daily;
+- run automated matching daily by provider reference, amount, currency, fee, date, Order and beneficiary;
+- assign unmatched, duplicate, late, partial and conflicting records to a named Finance Operations owner; no silent auto-resolution;
+- review exceptions each business day and escalate material/aged differences under approved thresholds;
+- perform monthly close with bank/provider statement reconciliation and signed review evidence;
+- store raw provider reports immutably with retrieval time, source, checksum, parser/adapter version and access audit; derived matching results are separately versioned.
+
+A provider report is not proof of MASTER's bank receipt unless it evidences that transfer.
+
+### 8.6 Pilot scope boundary — proposal, not launch approval
+
+Initial technical scope to evaluate: domestic Russian transactions, RUB only, one approved provider/legal flow at a time, and payment methods explicitly supported and contractually enabled by that provider (candidate cards and SBP). Exclude foreign payers/payees, cross-border transfers, FX, crypto, cash collection, stored value, wallet, peer-to-peer balance transfer and multi-currency ledger from pilot design. These exclusions do not make every domestic card/SBP flow lawful. Every method remains disabled until legal, provider, fiscalization, data and operational gates pass.
