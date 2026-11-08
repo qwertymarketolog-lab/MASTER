@@ -24,12 +24,17 @@ This is a conceptual contract. It does not decide whether a particular person or
 An **Account** is an authenticated platform principal used to sign in and maintain sessions.
 
 - It is not a customer, provider, company, or legal party by itself.
-- It has a stable internal identifier, lifecycle state, security settings, and authentication links.
+- It has a stable internal identifier, `account_type` (`HUMAN` or `SERVICE`), lifecycle state, security settings, and authentication links. HUMAN Accounts resolve to a Person; SERVICE Accounts do not require a Person and must have a named owning operator, narrow machine scopes, credential rotation/revocation, and explicit audit attribution.
 - An organization never signs in by sharing one organization password. People sign in with their own accounts and act under explicit authority.
 - Account recovery, linking, suspension, and closure are security-controlled lifecycle operations.
 - An account must not be merged with another account solely because an email address or phone number matches.
 
 ### 2.2 Person
+
+A Person has a claim-specific VerificationProfile rather than one universal trust score. Verification claims are independently recorded with level/status, source, scope, checked_at, valid_until/recheck_at, and evidence reference. Initial dimensions may include email, phone, identity, and other legally justified identity assurance claims. A higher level in one dimension does not imply another claim is verified.
+
+ContactPoints (email, phone, postal address, bank-account endpoint, or other approved contact channel) are separate records linked to a Person or Party as appropriate. Each has purpose, verification state/source/time, visibility, access policy, and retention. Changing a ContactPoint does not change the Person identity; bank-account verification does not prove identity, tax status, or legal authority.
+
 
 A **Person** is the human identity to which one or more verified account access methods may be linked.
 
@@ -53,6 +58,10 @@ A Party is not automatically a legal conclusion about who is a contracting party
 
 ### 2.4 Organization
 
+An Organization also has a claim-specific VerificationProfile, independent of its OrganizationType and legal authority. Business/registration and bank-account verification are separate claims with source, scope, time, and validity metadata. No single numeric verification level should be treated as a universal permission or payout threshold; risk policies evaluate the exact claim required for the action.
+
+### 2.5 Organization
+
 An **Organization** is a non-human organizational participant with its own stable platform identity and independently maintained legal/business attributes.
 
 - Legal form, registration identifiers, jurisdiction, status, and verification source are separate attributes with restricted access and retention.
@@ -63,7 +72,7 @@ An **Organization** is a non-human organizational participant with its own stabl
 - An informal team may use an Organization of type `TEAM` as a collaboration container. This does not create a legal entity, employer relationship, partnership, or single contracting party. Independent team members retain their own legal/tax status and may require separate agreements and payment flows.
 - A legal entity may have multiple people, roles, and delegated representatives.
 
-### 2.5 Membership
+### 2.6 Membership
 
 A **Membership** connects a Person to an Organization and grants scoped platform participation.
 
@@ -83,7 +92,7 @@ Rules:
 - The system must prevent accidental removal or disabling of the last required primary administrator without a controlled recovery path.
 - Historical orders, agreements, and audit events remain attributed to the person and Party that acted at the time; revoking membership does not rewrite history.
 
-### 2.6 Role, Permission, and Role Assignment
+### 2.7 Role, Permission, and Role Assignment
 
 A **Role** is a named bundle of permissions. A **Permission** is a narrowly defined action on a resource or operation. A **Role Assignment** grants a role within an explicit scope.
 
@@ -103,11 +112,11 @@ Authorization combines:
 
 A role alone never authorizes access to every resource.
 
-### 2.7 TaxStatus and Provider Business Status
+### 2.8 TaxStatus and Provider Business Status
 
 `TaxStatus` is a time-bound legal/tax classification attached to the relevant Party and supported by a named source, check time, validity/recheck policy, and result. Examples include `INDIVIDUAL`, `SELF_EMPLOYED_NPD`, `SOLE_PROPRIETOR`, and other legally reviewed statuses. It is not inferred from `OrganizationType`, identity verification, or qualification. Where the same human participates through more than one Party, status is evaluated for the Party and transaction context involved. A tax-status change creates a new version/event; historical transactions retain the status snapshot used at the time. Tax status alone does not determine the contracting party, tax agent, receipt issuer, or merchant of record; those are scenario-level legal decisions.
 
-### 2.8 Representation and Delegation
+### 2.9 Representation and Delegation
 
 A **Representation** records authority for a Person or Party to act on behalf of another Party for a defined scope.
 
@@ -190,6 +199,7 @@ Authorization must be checked on the server for every request and again at execu
 - Invitations are single-use, expiring, and bound to the intended recipient and organization.
 - Membership and representation revocation must invalidate sessions/tokens or force a fresh authorization check within a documented bound.
 - Account closure does not automatically delete records that must be retained for contracts, accounting, safety, dispute handling, or other lawful purposes. Retention and deletion are governed by DATA_PROTECTION.md.
+- Where deletion is required but a minimal historical transaction reference must lawfully remain, identifying Person data may be pseudonymized and replaced with a minimal tombstone/reference. This is not a blanket retention exception: each retained field needs a documented legal basis, purpose, access restriction, and expiry/review rule. Backups and derived copies follow the approved deletion schedule.
 - Administrative support access is separate from acting as the user. No password impersonation. Exceptional access requires a ticket/reason, narrow scope, time limit, audit, and review.
 
 ## 8. MVP boundary
@@ -207,6 +217,8 @@ For the Lesnoy pilot:
 - Party/OrganizationType/TaxStatus matrix and transaction-specific legal counterparty mapping.
 - ActingParty normalization and immutable snapshot tests across all consequential transaction events.
 - Verification claims and ContactPoint lifecycle/privacy controls.
+- Service Account ownership, scope, credential rotation, revocation, and attribution tests.
+- Pseudonymization/tombstone behavior preserving lawful historical transaction attribution.
 - Service Account permissions and non-human actor attribution.
 - Pseudonymization/tombstone behavior preserving lawful historical transaction attribution.
 - Permission matrix for each role, action, resource, and scope.
