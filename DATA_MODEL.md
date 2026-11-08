@@ -13,7 +13,14 @@ Use stable internal identifiers; explicit Party ownership; timestamps; versioned
 - **Person:** human identity record linked to an authenticated Account through a controlled linking process.
 - **Party:** domain participant used by requests, offers, agreements, orders, projects, and cases; Party kind is INDIVIDUAL or ORGANIZATION.
 - **IndividualParty:** Party representing a natural person acting in their own name.
-- **Organization:** organizational Party with separate legal/business attributes, jurisdiction, verification source, status, and retention controls.
+- **Organization:** organizational Party/container with `organization_type` (LEGAL_ENTITY, SOLE_PROPRIETOR, TEAM, OTHER), separate legal/business attributes, jurisdiction, verification source, status, and retention controls. SOLE_PROPRIETOR/TEAM container types do not assert separate legal personality.
+- **OrganizationType:** operating form of an Organization, distinct from Party kind and legal personality.
+- **TaxStatus:** time-bound, source-backed status attached to the relevant Party, with checked_at, valid_until/recheck_at, result, and version; transaction events preserve the evaluated snapshot.
+- **VerificationProfile / VerificationClaim:** independent claim-specific verification dimensions for Person and Organization (e.g. email, phone, identity, business, bank account), each with source, scope, status, and timestamps.
+- **ContactPoint:** independently managed email/phone/bank endpoint, verification state, purpose, visibility, and retention; not embedded as immutable Person identity.
+- **ServiceAccount:** non-human Account principal for integrations/automation, with owner/operator, narrow scopes, credentials lifecycle, and audit attribution; no Person link required.
+- **ActingParty / ActingPartySnapshot:** normalized `(Party, optional Representation)` action context and immutable event-time snapshot of actor Account/Person, Party, role/membership/representation references and versions, relevant verification/TaxStatus versions, authorization decision, and timestamp.
+- **PersonTombstone:** minimal pseudonymous historical reference retained only where a lawful retention basis requires transaction/audit continuity; identifying data is separately erased or pseudonymized under approved retention policy.
 - **Membership:** Person-to-Organization relationship with invitation, status, validity, scope, and audit history.
 - **RoleDefinition / PermissionDefinition:** versioned platform authorization vocabulary.
 - **RoleAssignment:** scoped grant of a role to a Person or Party for an Organization, Project, Case, or platform-operational scope.
@@ -47,14 +54,14 @@ Detailed invariants and open decisions are in IDENTITY_AND_ORGANIZATION_MODEL.md
 ## 4. Relationships and ownership
 
 - An Account authenticates a Person; an Account does not own an Organization.
-- A Person may have an Individual Party and may hold Memberships in multiple Organizations.
+- A Person may have an Individual Party and may hold Memberships in multiple Organizations. MVP permits one active Account per Person; account merge is out of scope.
 - A Person may act as customer in one workflow and provider in another.
 - An Organization acts through a Person with an active Membership and the required scoped Role Assignment and, where required, valid Representation.
 - Membership does not automatically prove legal signing authority.
-- Individual Entrepreneur / self-employed status is modeled separately from Party kind; it does not turn a natural person into an Organization.
+- TaxStatus is a time-bound attribute of the relevant Party, separate from Party kind and OrganizationType. An individual entrepreneur may act as an Individual Party or use an Organization(SOLE_PROPRIETOR) workspace without implying separate legal personality; an informal team may use Organization(TEAM) without implying a legal entity or single contracting party.
 - Every tenant-owned resource resolves to an owning Party. Public/platform-global resources are explicitly classified as such.
 - Cross-Party access requires an explicit relationship or resource grant. A shared Project does not erase the distinct ownership, agreements, or responsibilities of its participants.
-- Every consequential action records the authenticated actor and the Party in whose capacity the action was performed.
+- Every consequential action records a normalized ActingParty and immutable ActingPartySnapshot; historical snapshots are not rewritten when memberships, representatives, contact points, or statuses later change.
 
 A customer Party can create many Requests. A Request can receive many Offers and become one or more Orders only through explicit acceptance rules. An Order has one or more immutable AgreementSnapshots, ChangeRequests, Milestones, EvidenceItems, PaymentReferences, and Complaint cases. A Project groups tasks and Orders but does not erase separate Parties and agreements. An ExpertOpinion belongs to one Case and one ExpertAssignment.
 
