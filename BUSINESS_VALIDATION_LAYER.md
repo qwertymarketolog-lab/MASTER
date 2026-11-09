@@ -2,6 +2,8 @@
 
 **Status:** PROPOSED — research and pilot-design document only. Not an approved operating model, legal opinion, demand forecast, or implementation specification.
 
+**Geographic scope limitation:** Initial research is limited to Lesnoy, Sverdlovsk Oblast. Lesnoy is a small, closed administrative-territorial formation (ZATO); recruitment access and local networks may materially bias the sample. Findings are local and exploratory and must not be extrapolated automatically to Yekaterinburg, Moscow, or any other region.
+
 ## 1. Purpose and evidence rules
 
 Validate whether customers and independent providers in Lesnoy will use MASTER, what problem they will pay to solve, and which operating model can be tested with the least legal and financial exposure.
@@ -36,7 +38,7 @@ Output: validation/competitors.md and a source register.
 
 Start with a small qualitative round (suggested initial target: 10 customers and 10 providers, subject to recruitment feasibility). This is discovery, not a representative survey.
 
-Record consent, date, participant role, question set, anonymized notes, and whether a statement is a direct quote or interviewer summary. Do not collect passport data, payment credentials, unnecessary precise addresses, or sensitive personal details.
+Record date, participant role, question set, anonymized notes, recruitment channel, and whether a statement is a direct quote or interviewer summary. Before collecting any personal data (including names, phone numbers, or addresses), document the purpose, data categories, retention, access, applicable lawful basis under 152-FZ, and any required consent. Do not assume consent is the only possible lawful basis or that informal research is exempt. Prefer anonymous interviews; keep contact details separate and collect no passport data, payment credentials, unnecessary precise addresses, or sensitive personal details.
 
 Ask about past behavior and completed decisions, not only hypothetical willingness to buy. Seek disconfirming evidence and include people who decline. LLM-generated personas or simulated panels may generate interview questions and possible objections only. They cannot establish conversion, demand, or market size.
 
@@ -57,6 +59,71 @@ Each input must be tagged OBSERVED, PUBLIC_SOURCE, or ESTIMATE, with source/date
 
 Output: validation/unit-economics.md and machine-readable inputs with source references.
 
+## 2.5 Evidence chain and audit record — mandatory for every claim
+
+Every evidence item must have a stable unique ID and a traceable chain from source to conclusion. A summary without its underlying evidence reference is not an auditable finding.
+
+Minimum evidence record:
+- evidence_id and evidence_class;
+- claim or hypothesis being tested, including the exact interview question/research question;
+- source type and source reference (participant pseudonym, public URL, document ID, or calculation input IDs);
+- who collected/recorded it and when (timestamp with timezone);
+- when the underlying event or statement occurred, if different;
+- geography, category, participant role, recruitment channel, and relevant sample context;
+- verbatim quote or faithful raw note, clearly distinguished from interviewer interpretation;
+- consent status and documented lawful basis for any personal-data processing; do not store unnecessary identifiers in the evidence log;
+- transformations, coding, exclusions, corrections, and the person/date responsible for each;
+- links to derived findings and calculations; preserve the original record when a correction is made.
+
+For public sources, retain URL, publisher, publication/update date where available, access timestamp, and the exact claim supported. For estimates, retain formula, input evidence IDs, assumptions, units, and sensitivity range. For AI-generated material, retain model/tool and prompt/context where practical, label it SIMULATED, and prohibit promotion to customer evidence.
+
+Do not silently overwrite or delete source notes to make a hypothesis look stronger. Corrections must be appended with reason and author. Restrict access to interview records; store contact details separately from research notes and only when necessary and lawfully justified. If a complete chain cannot be reconstructed, downgrade the claim to UNKNOWN / INCONCLUSIVE.
+
+## 2.6 Recruitment channels and sample-bias control
+
+Track the channel through which each respondent was reached: personal contact, referral, local community/group, public listing, business outreach, inbound form, or other specified channel. Record whether the recruiter has a personal/business relationship with the respondent and whether any incentive was offered.
+
+Do not recruit only through one social circle or one provider network. Use at least three distinct recruitment routes where feasible; actively seek respondents outside the founder's immediate contacts, including people who declined or chose a competing alternative. Maintain a recruitment log with invitations, responses, refusals, duplicate detection, and channel counts. Do not interpret convenience or referral samples as representative of Lesnoy.
+
+The suggested initial discovery target of 10 customers and 10 providers is qualitative and exploratory, not a statistical sample-size claim. Report the actual denominator, recruitment channels, role/category mix, and obvious coverage gaps. Small-city network effects and repeated referrals can make respondents correlated; disclose that limitation and do not extrapolate automatically to Yekaterinburg, Moscow, or other regions.
+
+## 2.7 Kill criteria and falsification discipline
+
+Before each interview/research round, write down the hypothesis, what evidence would support it, what evidence would contradict it, and the threshold that triggers STOP, REVISE, or HOLD. Do not change thresholds after seeing results without recording a dated rationale and treating the revised test as a new hypothesis.
+
+Initial falsification rules (PROPOSED thresholds to validate, not market facts):
+- **Category problem:** if fewer than 3 of 10 independently recruited target customers in a category describe a recent, concrete problem with their current way of finding/commissioning the service, do not advance that category on discovery evidence alone; revise the segment/problem hypothesis.
+- **Provider willingness:** if 0 of 10 independently recruited qualified providers in a category agree to a clearly described, legally reviewed next-step test under the disclosed proposed fee, stop that fee/category combination. Do not generalize the result to all categories or all providers.
+- **Channel viability:** if a channel produces no qualified conversations after 20 documented, appropriately targeted invitations, pause that channel and investigate reach/message/segment before spending further.
+- **Unit economics:** if contribution remains negative under the defensible base case and plausible upside sensitivity, do not proceed with paid acquisition or scale assumptions; revise price, cost, channel, or model.
+- **Legal feasibility:** any unresolved material question about legal role, personal-data basis, marketing claims, consumer disclosures, or compensation means HOLD; no public pilot or transaction.
+- **Trust/quality proposition:** if customers cannot identify a meaningful risk or coordination problem that MASTER can address beyond an existing free substitute, do not assume verification/coordination features create willingness to pay.
+
+These thresholds are decision rules for a small exploratory test, not statistical proof. A failed threshold rejects or pauses the tested category/offer/channel combination, not MASTER as a whole. A positive result does not prove product-market fit or justify launch.
+
+## 3. Category selection for pilot validation
+
+Do not use one easy category as a proxy for the entire business model. Test 2–3 categories in parallel where recruitment and legal review permit, with different interview guides and separate results. Keep “husband for an hour” / minor household repair as a low-complexity control category, not the sole primary test.
+
+Selection criteria:
+1. Typical job value plausibly above RUB 15,000–20,000, to be verified through real local quotes rather than assumed.
+2. Multi-visit or multi-stage work that creates coordination, scheduling, scope-change, or acceptance friction.
+3. A meaningful need to assess qualifications, experience, permits, or specialist competence, where applicable.
+4. Discovery friction: customers struggle to identify and compare suitable providers through existing channels.
+5. Evidence that professional providers may pay for a qualified opportunity or coordination service; willingness must be tested, not presumed.
+
+| Candidate category | Ticket hypothesis | Coordination value | Qualification / trust value | Discovery friction | Initial role |
+|---|---|---|---|---|---|
+| Apartment renovation / multi-stage work | Potentially high; verify quotes and scope | High: stages, trades, materials, changes, acceptance | High; scope and competence vary | To test; referrals may dominate | Primary candidate |
+| Complex plumbing / electrical work | Variable; split urgent small jobs from major work | Medium to high for complex or multi-stage jobs | Potentially high; qualification/safety checks matter | Potentially high for uncommon specialists | Primary candidate, narrowly scoped |
+| Small-business premises work (offices/shops) | Potentially medium/high; verify B2B budgets | High when scheduling, access, downtime, and multiple tasks matter | Depends on work type and procurement requirements | To test with business decision-makers | Primary candidate if reachable |
+| Specialist trades (tiler, welder, stretch-ceiling installer) | Potentially medium/high; verify by job type | Medium; rises with project duration and dependencies | Potentially high | Potentially high for scarce local skills | Candidate / compare |
+| Minor household repair (“husband for an hour”) | Often hypothesized lower; collect actual local quotes | Usually low for a single visit | Variable | May be low due to personal referrals | Control group, not sole test |
+
+All entries in the matrix are initial hypotheses, not verified descriptions of the Lesnoy market. Do not assign numeric scores or rank categories until source-backed desk research and interviews exist. Record category-specific exclusions, seasonality, safety risks, licensing/qualification questions, and whether the work is legally suitable for a referral pilot.
+
+For each selected category, compare at least: (a) recent customer problem and current workaround, (b) actual quote/contract value, (c) number of stages/visits and coordination burden, (d) qualification evidence required, (e) how the respondent currently finds providers, (f) provider willingness under a clearly disclosed fee, and (g) legal/safety stop conditions.
+
 ## 3. Low-exposure pilot hypothesis
 
 **Initial hypothesis to investigate, not an approved legal conclusion:** a narrow information/referral service helps a customer find an independent provider; the customer and provider independently decide whether to contract and settle directly.
@@ -66,12 +133,12 @@ For the first validation stage:
 - no wallet, escrow, payment holding, split settlement, or payment initiation;
 - MASTER does not sign the service contract for either party;
 - MASTER does not negotiate or accept terms as an undisclosed representative;
-- MASTER does not promise provider performance, licensing, solvency, or a guaranteed result;
+- MASTER does not promise provider performance, licensing, solvency, or a guaranteed result; all advertising, landing-page, interface, and sales statements must be accurate, substantiated, and consistent with the actual service. A disclaimer in the footer does not cure a misleading headline or implied guarantee;
 - provider identity/status claims are shown only with a defined source, date, scope, and limitations;
 - no public rating or VERIFIED badge without a documented evidence standard;
-- communications and personal-data processing are minimized and documented.
+- communications and personal-data processing are minimized and documented; even a simple public landing page or lead form requires review of its notices, privacy information, data collection, and legal basis before publication.
 
-This hypothesis does not establish that MASTER is outside Russian platform-economy, advertising, consumer-protection, personal-data, agency, tax, or other regulation. Counsel must assess actual functionality, contracts, UI wording, data flows, and compensation before a public pilot.
+This hypothesis does not establish that MASTER is outside Russian platform-economy, advertising, consumer-protection, personal-data, agency, tax, or other regulation. Counsel must assess actual functionality, contracts, UI wording, advertising claims, data flows, and compensation before a public pilot. Any actual transaction or receipt of money — including a test payment of RUB 1 — is a hard trigger for a new legal, accounting, provider, fiscalization, security, and funds-flow review before the transaction is enabled, not after it occurs.
 
 ## 4. Revenue models to compare — none selected
 
