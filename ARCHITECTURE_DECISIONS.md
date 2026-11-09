@@ -144,3 +144,23 @@ This register records material decisions. Append new entries; do not silently re
 - **Impact:** BUSINESS_AND_LEGAL_MODEL, PAYMENT_MODEL, TRANSACTION_FINANCIAL_MODEL, DATA_MODEL, tax/receipt workflows, Order/Agreement, provider adapters, support, accounting and compliance.
 - **Approvers:** Product owner decision pending; legal, accounting, provider, compliance and security approvals required in their domains.
 - **Rollback:** If no lawful and operationally viable option is confirmed, disable online payments for pilot and use only a separately reviewed non-platform settlement path. Do not improvise custody or agency.
+
+
+### ADR-2026-012 — Evidence-led business validation layer
+- **Status:** PROPOSED — no launch or operating-model approval.
+- **Date:** 2026-11-09
+- **Context:** MASTER needs to validate customer problems, provider supply, alternatives, and unit economics before investing in a public marketplace or live transaction flow. External founder skills can offer methods but include simulated buyer outputs that must not be confused with market evidence.
+- **Decision proposal:**
+  1. Add a documentation-only validation layer with four workstreams: board-style business critique, source-backed competitor/substitute research, real customer/provider discovery, and traceable unit economics.
+  2. Preserve explicit evidence classes OBSERVED, CUSTOMER_REPORTED, PUBLIC_SOURCE, ESTIMATE, SIMULATED, LEGAL_REVIEW_REQUIRED, and UNKNOWN/INCONCLUSIVE.
+  3. Treat simulated buyers as hypothesis-generation only; never as customers, demand proof, testimonials, or conversion forecasts.
+  4. Investigate a narrow information/referral model with direct customer-provider contracting and direct settlement as a hypothesis only; do not assume this excludes platform, advertising, consumer, privacy, agency, tax, or other duties.
+  5. Exclude platform collection/holding of customer funds, escrow, payment split, payment initiation, undisclosed representation, and performance guarantees from the initial validation stage.
+  6. Compare listing/subscription, qualified-lead, success-based referral, customer service, and transaction-commission models without selecting one until legal/accounting review of actual conduct and documents.
+  7. Require real interviews, source-backed research, traceable economics, documented data handling, written professional review, and explicit stop gates before a pilot can be proposed.
+- **Alternatives:** Install and run all external skills as platform dependencies; rely on a 100-agent simulated panel; start with transaction commissions and split payments. Rejected because they add unnecessary dependencies and can turn simulated or unresolved assumptions into apparent evidence or premature legal/financial exposure.
+- **Consequences:** Slower but more defensible validation; no runtime behavior, data schema, payment flow, or legal status is changed by this proposal. The information/referral hypothesis may still create legal duties and requires counsel review.
+- **Impact:** Business model, customer/provider journeys, marketing disclosures, privacy/data inventory, provider onboarding, complaint handling, fee model, accounting, roadmap, and future requirements traceability.
+- **Migration/rollback:** Documentation-only. Remove or supersede the proposal if research or legal review rejects it; do not implement product behavior from this ADR alone.
+- **Evidence:** Founder Skill README and four selected skill instructions reviewed 2026-11-09; MASTER BUSINESS_AND_LEGAL_MODEL.md, PAYMENT_MODEL.md, DATA_PROTECTION.md, ROADMAP.md, and CHANGE_MANAGEMENT.md. External panel is explicitly described by its own README as simulated, not a forecast. No customer interviews, legal opinion, provider confirmation, or financial validation has yet been obtained.
+- **Approvers:** Product-owner review pending; qualified legal, accounting, privacy, and operational review required before any public pilot.
