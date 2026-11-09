@@ -35,7 +35,7 @@ Nothing in this repository should be interpreted as legal advice, a guarantee of
 - `GLOSSARY.md` — shared domain vocabulary and naming rules.
 - `SECURITY.md` — security principles, threat boundaries, access control, and incident response.
 - `DATA_PROTECTION.md` — personal-data governance and privacy-by-design requirements.
-- `BUSINESS_AND_LEGAL_MODEL.md` — intended roles, service relationships, liability questions, and legal review gates.
+- `BUSINESS_AND_LEGAL_MODEL.md` — intended roles, service relationships, liability questions, and legal review gates.\n- `BUSINESS_VALIDATION_LAYER.md` — evidence-led business validation, customer discovery, revenue-model hypotheses, and pilot stop gates.
 - `PAYMENT_MODEL.md` — payment flows, provider boundary, fees, refunds, and fiscalization questions.
 - `ROADMAP.md` — staged delivery and explicit launch gates.
 - `ARCHITECTURE_DECISIONS.md` — append-only decision register.
