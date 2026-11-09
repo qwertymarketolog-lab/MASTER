@@ -164,3 +164,14 @@ This register records material decisions. Append new entries; do not silently re
 - **Migration/rollback:** Documentation-only. Remove or supersede the proposal if research or legal review rejects it; do not implement product behavior from this ADR alone.
 - **Evidence:** Founder Skill README and four selected skill instructions reviewed 2026-11-09; MASTER BUSINESS_AND_LEGAL_MODEL.md, PAYMENT_MODEL.md, DATA_PROTECTION.md, ROADMAP.md, and CHANGE_MANAGEMENT.md. External panel is explicitly described by its own README as simulated, not a forecast. No customer interviews, legal opinion, provider confirmation, or financial validation has yet been obtained.
 - **Approvers:** Product-owner review pending; qualified legal, accounting, privacy, and operational review required before any public pilot.
+
+
+#### ADR-2026-012 — Amendment note (2026-11-09)
+The validation proposal was expanded without changing its PROPOSED status:
+- mandatory claim-level chain of evidence and append-only correction history;
+- recruitment-channel logging, referral-bias controls, and explicit small-city/geographic limitations;
+- predeclared kill criteria and category/offer/channel-specific stop rules;
+- parallel category comparison, with minor household repair retained only as a control category;
+- explicit review of marketing claims and landing-page notices, 152-FZ lawful-basis/data-minimization questions, and a mandatory new professional review before any real transaction, including a RUB 1 test payment.
+
+These additions are methodology and governance requirements, not evidence that the relevant legal requirements have been satisfied. No personal-data collection, public pilot, payment, or production implementation is authorized.
